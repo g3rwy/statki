@@ -1,0 +1,10 @@
+1 2 (koordynaty statki)
+1 - pionowo
+0 - poziomo
+
+5x5
+
+9 - przyległe pola
+8 - strzał
+
+

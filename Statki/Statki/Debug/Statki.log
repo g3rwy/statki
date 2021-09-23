@@ -1,0 +1,3 @@
+﻿  Statki.cpp
+C:\Users\gerwatowskim\Desktop\Statki\Statki\Statki\Statki.cpp(22,6): warning C4101: "statki": lokalna zmienna, do której nie istnieje odwołanie
+  Statki.vcxproj -> C:\Users\gerwatowskim\Desktop\Statki\Statki\Debug\Statki.exe
