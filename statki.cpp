@@ -27,9 +27,11 @@ struct statekTyp{ // struktura statku
 using namespace std;
 
 char statki_symbole[] = {
-	'0', // Puste pole
+	'.', // Puste pole
 	'#', // Statek
-	'*'  // Pole przyległe (nie można tu wstawiać)
+	'*', // Pole przyległe (nie można tu wstawiać)
+	'O', // Pudło
+	'X', // Strzał trafiony
 };
 
 void show(int p[][5]){ // p od Pole
@@ -43,35 +45,71 @@ void show(int p[][5]){ // p od Pole
 	}
 }
 
+int ile_niezatopionych(statekTyp statki[], int n = 3){
+	int res = 0;
+	for(int i=0; i < n; i++)
+		res += !(statki[i].trafienia == statki[i].len);
+	return res;
+}
+
 void wstaw_statek(statekTyp s, int p[][5]){
 	if(s.orient == 0){ // poziomo
-		if(s.x-2 >= 0) 		 p[s.y-1][s.x - 2] 		   = 2; 	// przyległe pole na lewo od statku
-		if(s.x + s.len <= 5) p[s.y-1][s.x + s.len - 1] = 2; 	// przyległe pole na prawo od statku
 
-		for(int i = 0; i < s.len ; i++){ 				  // Wstawienie pól przyległych nad i pod statkiem
-			if(s.y-2 >= 0) p[s.y-2][s.x-1 + i] = 2; 
-			if(s.y < 5)	   p[s.y][s.x-1 + i]   = 2;
-		}
+		for(int i=s.x-2; i< s.x+s.len;i++)
+			for(int j=s.y-2; j < s.y+1;j++)
+				if(i >= 0 && i < 5 && j >= 0 && j < 5)	p[j][i] = 2;
 
 		for(int i = 0; i < s.len ; i++)	p[s.y - 1][i + s.x - 1] = 1; // wstaw tam gdzie jest statek
 	}
-	else{ 			   // pionowo
-		if(s.y-2 >= 0) p[s.y-2][s.x - 1] = 2; 				  // przyległe pole na górze od statku
-		if(s.y + s.len <= 5) p[s.y + s.len -1][s.x - 1] = 2; // przyległe pole na dole od statku
+	else { 			   // pionowo
 
-		for(int i = 0; i < s.len ; i++){ 				    // Wstawienie pól przyległych po bokach statku
-			if(s.x-2 < 5 && s.x != 1)  p[s.y-1 + i][s.x-2] = 2; //! != 1 jest po to żeby przyległe pola się nie pojawiły po drugiej stronie
-			if(s.x >= 0  && s.x != 5)  p[s.y-1 + i][s.x]   = 2; //! != 5 Tutaj to samo, przyległe pola pojawiają się po drugiej stronie, a != 5 powoduje że nie wstawiają się gdy statek jest na końcu pola
-		}
-
+		for(int i=s.x-2; i< s.x + 1;i++)
+			for(int j=s.y-2; j < s.y+s.len;j++)
+				if(i >= 0 && i < 5 && j >= 0 && j < 5)	p[j][i] = 2;
+		
 		for(int i = 0; i < s.len ; i++)	p[i + s.y - 1][s.x - 1] = 1; // wstaw tam gdzie jest statek
+	}
+}
+
+int znajdz_statek(statekTyp statki[],int x, int y,int n = 3){
+	for(int i=0; i < n; i++){
+		if(statki[i].orient == 0){ // statek poziomy
+
+			if(statki[i].y == y)
+				for(int j=0; j < statki[i].len; j++) if(statki[i].x + j == x) return i;
+		}
+		else{ // statek pionowy
+
+			if(statki[i].x == x)
+				for(int j=0; j < statki[i].len; j++) if(statki[i].y + j == y) return i;
+		}
+	}
+	return -1;
+}
+
+void strzel(int x,int y, statekTyp statki[],int p[][5]) {
+	int index = znajdz_statek(statki,x,y);
+	if(index == -1){
+		cout << "\nPUDŁO\n";
+		p[y-1][x-1] = 3;
+	}
+	else{
+		if(statki[index].len == statki[index].trafienia) cout << "\nPUDŁO\n"; // Jeżeli statek już wcześniej trafiony
+		else{
+			statki[index].trafienia++;
+			if(statki[index].len == statki[index].trafienia)
+				cout << "\n!!ZATOPIONY!!\n"; // Zatopiony jeżeli wszystkie pola już zostały trafione
+			else
+				cout << "\nTRAFIONY\n";
+			p[y-1][x-1] = 4; 
+		}
 	}
 }
 
 int main(){
 
 	int ile_statkow = 3; // ile statków dla gracza
-	int statki_lista[ile_statkow] = {3,2,1}; // Trzyma ile i jakie statki chcemy w grze (czyli ich długość)
+	int* statki_lista = new int[ile_statkow] {3,2,1}; // Trzyma ile i jakie statki chcemy w grze (czyli ich długość)
 	
 
 	statekTyp* statki_gracz1 = new statekTyp[ile_statkow];
@@ -80,7 +118,6 @@ int main(){
 	int pole[5][5] = {0}; // powinno być pole1 i pole2, żeby mieć strzały gracza1 i gracza2
 
 	for(int i=0;i< ile_statkow;i++){ // Pętla wstawiania danych o statku
-		//? Czy pokazywać pole z każdym wstawieniem statku
 		show(pole);
 		
 		int x,y,z = 0;
@@ -125,11 +162,30 @@ int main(){
 		statki_gracz1[i].orient = z;
 		statki_gracz1[i].len = len;
 
-		// Tu ustawić te pola w okół statku na pola przyległe (nie można stawiać statku obok drugiego statku)
+		
 		// I wstawić statek na pole
 		wstaw_statek(statki_gracz1[i],pole);
 	}
 
-	show(pole);
+	for(int i=0; i < 5; i++)
+		for(int j=0; j < 5; j++)
+			if(pole[i][j] == 2) pole[i][j] = 0; // Wyczyść przyległe pola
+
+	while(ile_niezatopionych(statki_gracz1) > 0){
+		show(pole);
+		int x,y;
+		cout << "\nGdzie strzelic?\nx: ";
+		cin >> x;
+		cout << "y: ";
+		cin >> y;
+		
+		if((x <= 5 && x >= 1) && (y >= 1 && y <= 5)){
+			strzel(x,y,statki_gracz1,pole);
+		}
+		else{
+			cout << "Miejsce poza polem, spróbuj jeszcze raz\n";
+		}
+	}
+	cout << "\n\n PRZEGRAŁEŚ \n\n";
 	return 0;
 }
