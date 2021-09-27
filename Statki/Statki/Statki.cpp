@@ -65,6 +65,7 @@ int main()
 	const int n = 7;
 	int plansza1[n][n];
 	vector <int> statki1[3];
+	int zatopiony = 0;
 
 	//zerowania tablic
 	for (int i = 0; i < n; i++)
@@ -74,12 +75,51 @@ int main()
 
 	umiesc_statek(3, plansza1, statki1);
 	umiesc_statek(2, plansza1, statki1);
+	umiesc_statek(1, plansza1, statki1);
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			if (plansza1[j][i] == 9) plansza1[j][i] = 0;
+
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++)
 			cout << plansza1[j][i] << " ";
 		cout << endl;
 	}
 
+	while (zatopiony < 3) {
+		int x, y,id;
+		cin >> x >> y;
+		if ((plansza1[x][y] <= 3) && (plansza1[x][y] >= 1)) {
+			if (plansza1[x][y] == 1) {
+				plansza1[x][y] = 0;
+					zatopiony++;
+					cout << "zatopiony";
+			}
+			else {
+				for (int i = 1; i < statki1[2].size() - 1; i++) 
+					if (statki1[0][i] == x && statki1[1][i] == y) {
+						id = statki1[2][i];
+						statki1[0][i] = 0;
+						statki1[1][i] = 0;
+						statki1[2][i] = 0;
+						plansza1[x][y] = 0;
+					}
+				
+				for (int i = 1; i < statki1[2].size() - 1; i++)
+					if (statki1[2][i] == id) {
+						plansza1[statki1[0][i]][statki1[1][i]]--;
+					}
+				cout << "trafiony";
+			}
+		}
+		cout << endl;
+	for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++)
+				cout << plansza1[j][i] << " ";
+			cout << endl;
+	}
+	}
 }
 
 
