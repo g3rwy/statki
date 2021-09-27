@@ -1,5 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
+#include <string>
+
 using namespace std;
 
 void umiesc_statek(int a, int plansza[7][7], vector <int> statki[3]) {
@@ -60,17 +62,21 @@ void umiesc_statek(int a, int plansza[7][7], vector <int> statki[3]) {
 			plansza[statki[0][statki->size() - i]][statki[1][statki->size() - i]] = a;
 	}
 }
+
 int main()
 {
 	const int n = 7;
 	int plansza1[n][n];
+	string plansza11[n][n];
 	vector <int> statki1[3];
 	int zatopiony = 0;
 
 	//zerowania tablic
 	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
+		for (int j = 0; j < n; j++) {
 			plansza1[i][j] = 0; //Y X
+			plansza11[i][j] = ".";
+		}
 	for (int i = 0; i < 3; i++) statki1[i].push_back(0);
 
 	umiesc_statek(3, plansza1, statki1);
@@ -83,7 +89,7 @@ int main()
 
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++)
-			cout << plansza1[j][i] << " ";
+			cout << plansza11[j][i] << " ";
 		cout << endl;
 	}
 
@@ -94,7 +100,7 @@ int main()
 			if (plansza1[x][y] == 1) {
 				plansza1[x][y] = 0;
 					zatopiony++;
-					cout << "zatopiony";
+					cout << "zatopiony\n";
 			}
 			else {
 				for (int i = 1; i < statki1[2].size() - 1; i++) 
@@ -110,13 +116,15 @@ int main()
 					if (statki1[2][i] == id) {
 						plansza1[statki1[0][i]][statki1[1][i]]--;
 					}
-				cout << "trafiony";
+				cout << "trafiony\n";
 			}
+			plansza11[x][y] = "X";
 		}
-		cout << endl;
+		else plansza11[x][y] = "O";
+	cout << endl;
 	for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++)
-				cout << plansza1[j][i] << " ";
+				cout << plansza11[j][i] << " ";
 			cout << endl;
 	}
 	}
