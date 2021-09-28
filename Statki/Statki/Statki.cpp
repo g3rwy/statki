@@ -159,7 +159,7 @@ int main()
     int komputer[25][2];
     string plansza11[n][n];
     vector <int> statki1[3], statki2[3];
-    int zatopiony = 0, licznik = 0;
+    int zatopiony = 0, zatopionyk = 0, licznik = 0;
 
     //zerowania tablic
     for (int i = 0; i < 3; i++) {
@@ -192,7 +192,7 @@ int main()
     umiesc_statek_k(1, plansza2, statki2);
 
     bool a = true;
-    while (zatopiony < 4) {
+    while (zatopiony < 4 || zatopionyk < 4) {
         int x, y, z, los;
 
         if (a) {
@@ -235,6 +235,7 @@ int main()
         komputer[los][0] = 0;
         komputer[los][1] = 0;
         if (z == 2) {
+            zatopionyk++;
             cout << " zatopiony" << endl;
             a = false;
         }
@@ -255,6 +256,9 @@ int main()
         /*for (int i = 0; i < licznik; i++)
             cout << komputer[i][0] << " " << komputer[i][1] << endl;*/
     }
+
+    if (zatopiony == 4) cout << "wygral gracz";
+    else cout << "wygral komputer";
 }
 
 /*
