@@ -1,278 +1,261 @@
 ﻿#include <iostream>
 #include <vector>
-#include <string>
-#include <random>
-
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 using namespace std;
 
 void umiesc_statek(int a, int plansza[7][7], vector <int> statki[3]) {
 
-	bool ok = false;
-	int x, y, z, id;
+    bool ok = false;
+    int x, y, z, id;
 
-	while (ok == false) {
-		ok = true;
-		cout << "podaj " << a << " - masztowiec: ";
-		cin >> x >> y >> z;
-		if (z == 0) { //poziomo
-			if (x > 6 - a) {
-				cout << "podales zla lokalizacje dla wspolrzednej X";
-				ok = false;
-			}
-			else
-				for (int i = x; i < x + a; i++)
-					if (plansza[i][y] != 0) ok = false;
-		}
-		else if (z == 1) { //pionowo
-			if (y > 6 - a) {
-				cout << "podales zla lokalizacje dla wspolrzednej Y";
-				ok = false;
-			}
-			else
-				for (int i = y; i < y + a; i++)
-					if (plansza[x][i] != 0) ok = false;
-		}
-	}
+    while (ok == false) {
+        ok = true;
+        cout << "podaj " << a << " - masztowiec: ";
+        cin >> x >> y >> z;
+        if (z == 0) { //poziomo
+            if (x > 6 - a) {
+                cout << "podales zla lokalizacje dla wspolrzednej X";
+                ok = false;
+            }
+            else
+                for (int i = x; i < x + a; i++)
+                    if (plansza[i][y] != 0) ok = false;
+        }
+        else if (z == 1) { //pionowo
+            if (y > 6 - a) {
+                cout << "podales zla lokalizacje dla wspolrzednej Y";
+                ok = false;
+            }
+            else
+                for (int i = y; i < y + a; i++)
+                    if (plansza[x][i] != 0) ok = false;
+        }
+    }
 
-	id = statki[2][statki->size() - 1];
-	id++;
-	if (z == 0) {
-		for (int i = x; i < x + a; i++) {
-			statki[0].push_back(i);
-			statki[1].push_back(y);
-			statki[2].push_back(id);
-		}
-	}
-	else {
-		for (int i = y; i < y + a; i++) {
-			statki[0].push_back(x);
-			statki[1].push_back(i);
-			statki[2].push_back(id);
-		}
-	}
-	for (int i = 1; i <= a; i++) {
-		int xx, yy;
-		xx = statki[0][statki->size() - i];
-		yy = statki[1][statki->size() - i];
-		for (int k = xx - 1; k <= xx + 1; k++)
-			for (int l = yy - 1; l <= yy + 1; l++)
-				plansza[k][l] = 9;
-	}
-	for (int i = 1; i <= a; i++)
-		plansza[statki[0][statki->size() - i]][statki[1][statki->size() - i]] = a;
+    id = statki[2][statki->size() - 1];
+    id++;
+    if (z == 0) {
+        for (int i = x; i < x + a; i++) {
+            statki[0].push_back(i);
+            statki[1].push_back(y);
+            statki[2].push_back(id);
+        }
+    }
+    else {
+        for (int i = y; i < y + a; i++) {
+            statki[0].push_back(x);
+            statki[1].push_back(i);
+            statki[2].push_back(id);
+        }
+    }
+    for (int i = 1; i <= a; i++) {
+        int xx, yy;
+        xx = statki[0][statki->size() - i];
+        yy = statki[1][statki->size() - i];
+        for (int k = xx - 1; k <= xx + 1; k++)
+            for (int l = yy - 1; l <= yy + 1; l++)
+                plansza[k][l] = 9;
+    }
+    for (int i = 1; i <= a; i++)
+        plansza[statki[0][statki->size() - i]][statki[1][statki->size() - i]] = a;
 }
 
 void umiesc_statek_k(int a, int plansza[7][7], vector <int> statki[3]) {
 
-	bool ok = false;
-	int x, y, z, id;
+    bool ok = false;
+    int x, y, z, id;
 
-	while (ok == false) {
-		ok = true;
-		//cout << "podaj " << a << " - masztowiec: ";
-		//cin >> x >> y >> z;
+    while (ok == false) {
+        ok = true;
+        x = rand() % 5 + 1;
+        y = rand() % 5 + 1;
+        z = rand() % 2;
+        /*cout << x << " " << y << " " << z << " " << a << endl;*/
+        if (z == 0) { //poziomo
+            if (x > 6 - a) ok = false;
+            else
+                for (int i = x; i < x + a; i++)
+                    if (plansza[i][y] != 0) ok = false;
+        }
+        else if (z == 1) { //pionowo
+            if (y > 6 - a) ok = false;
+            else
+                for (int i = y; i < y + a; i++)
+                    if (plansza[x][i] != 0) ok = false;
+        }
+    }
 
-		x = rand() % 5 + 1;
-		y = rand() % 5 + 1;
-		z = rand() % 2;
-
-		if (z == 0) { //poziomo
-			if (x > 6 - a) {
-				//cout << "podales zla lokalizacje dla wspolrzednej X";
-				ok = false;
-			}
-			else
-				for (int i = x; i < x + a; i++)
-					if (plansza[i][y] != 0) ok = false;
-		}
-		else if (z == 1) { //pionowo
-			if (y > 6 - a) {
-				//cout << "podales zla lokalizacje dla wspolrzednej Y";
-				ok = false;
-			}
-			else
-				for (int i = y; i < y + a; i++)
-					if (plansza[x][i] != 0) ok = false;
-		}
-	}
-
-	id = statki[2][statki->size() - 1];
-	id++; 
-
-	if (z == 0) {
-		for (int i = x; i < x + a; i++) {
-			statki[0].push_back(i);
-			statki[1].push_back(y);
-			statki[2].push_back(id);
-		}
-	}
-	else {
-		for (int i = y; i < y + a; i++) {
-			statki[0].push_back(x);
-			statki[1].push_back(i);
-			statki[2].push_back(id);
-		}
-	}
-	for (int i = 1; i <= a; i++) {
-		int xx, yy;
-		xx = statki[0][statki->size() - i];
-		yy = statki[1][statki->size() - i];
-		for (int k = xx - 1; k <= xx + 1; k++)
-			for (int l = yy - 1; l <= yy + 1; l++)
-				plansza[k][l] = 9;
-	}
-	for (int i = 1; i <= a; i++)
-		plansza[statki[0][statki->size() - i]][statki[1][statki->size() - i]] = a;
+    id = statki[2][statki->size() - 1];
+    id++;
+    if (z == 0) {
+        for (int i = x; i < x + a; i++) {
+            statki[0].push_back(i);
+            statki[1].push_back(y);
+            statki[2].push_back(id);
+        }
+    }
+    else {
+        for (int i = y; i < y + a; i++) {
+            statki[0].push_back(x);
+            statki[1].push_back(i);
+            statki[2].push_back(id);
+        }
+    }
+    for (int i = 1; i <= a; i++) {
+        int xx, yy;
+        xx = statki[0][statki->size() - i];
+        yy = statki[1][statki->size() - i];
+        for (int k = xx - 1; k <= xx + 1; k++)
+            for (int l = yy - 1; l <= yy + 1; l++)
+                plansza[k][l] = 9;
+    }
+    for (int i = 1; i <= a; i++)
+        plansza[statki[0][statki->size() - i]][statki[1][statki->size() - i]] = a;
 }
 
 int strzal(int x, int y, int plansza[7][7], vector <int> statki[3]) {
-	int zat = 0,id;
-	if ((plansza[x][y] <= 3) && (plansza[x][y] >= 1)) {
-		if (plansza[x][y] == 1) {
-			plansza[x][y] = 0;
-			//zatopiony++;
-			zat = 2;
-			//cout << "zatopiony\n";
-		}
-		else {
-			for (int i = 1; i < statki[2].size() - 1; i++)
-				if (statki[0][i] == x && statki[1][i] == y) {
-					id = statki[2][i];
-					statki[0][i] = 0;
-					statki[1][i] = 0;
-					statki[2][i] = 0;
-					plansza[x][y] = 0;
-				}
-
-			for (int i = 1; i < statki[2].size() - 1; i++)
-				if (statki[2][i] == id) {
-					plansza[statki[0][i]][statki[1][i]]--;
-				}
-			zat = 1;
-			//cout << "trafiony\n";
-		}
-		//plansza11[x][y] = "X";
-	}
-	//else plansza11[x][y] = "O";
-	//cout << endl;
-	/*for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++)
-			cout << plansza11[j][i] << " ";
-		cout << endl;
-	}
-	*/
-	return zat;
+    int zat = 0, id;
+    if ((plansza[x][y] <= 3) && (plansza[x][y] >= 1)) {
+        if (plansza[x][y] == 1) { // zatopiony
+            plansza[x][y] = 0;
+            zat = 2;
+        }
+        else {
+            for (int i = 1; i < statki[2].size(); i++)
+                if ((statki[0][i] == x) && (statki[1][i] == y)) {
+                    id = statki[2][i];
+                    statki[0][i] = 0;
+                    statki[1][i] = 0;
+                    statki[2][i] = 0;
+                    plansza[x][y] = 0;
+                }
+            for (int i = 1; i < statki[2].size(); i++)
+                if (statki[2][i] == id)
+                    plansza[statki[0][i]][statki[1][i]]--;
+            zat = 1;
+        }
+    }
+    return zat;
 }
 
-void wstawianie_sort(int a[][2], int n) {
-	int curr_index = 1;
-	for (int i = 0; i < n; i++) {
-		int curr_index = 0;
-		while (curr_index < n) {
-			for (int k = curr_index; k > 0; k--) {
-				if (a[k][0] > a[k - 1][0]) {
-					swap(a[k][0], a[k - 1][0]);
-					swap(a[k][1], a[k - 1][1]);
-				}
-				else break;
-			}
-			curr_index++;
-		}
-	}
+void sortowanie_przez_wstawianie(int tab[][2], int n) {
+    int j = 1, k;
+    while (j <= n) {
+        for (k = j; k > 0; k--)
+            if (tab[k][0] > tab[k - 1][0]) {
+                swap(tab[k][0], tab[k - 1][0]);
+                swap(tab[k][1], tab[k - 1][1]);
+            }
+            else break;
+        j++;
+    }
 }
 
 int main()
 {
-	srand(time(NULL));
-	const int n = 7;
-	int plansza1[n][n] = { 0 };
-	int plansza2[n][n] = { 0 };
-	int komputer[25][2] = { 0 };
+    srand(time(NULL));
+    const int n = 7;
+    int komputer[25][2];
+    string plansza11[n][n];
+    vector <int> statki1[3], statki2[3];
+    int zatopiony = 0, licznik = 0;
+
+    //zerowania tablic
+    for (int i = 0; i < 3; i++) {
+        statki1[i].push_back(0);
+        statki2[i].push_back(0);
+    }
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++) {
+            plansza11[i][j] = '.'; //Y X
+
+        }
+    for (int i = 1; i <= 5; i++)
+        for (int j = 1; j <= 5; j++) {
+            komputer[licznik][0] = i;
+            komputer[licznik][1] = j;
+            licznik++;
+        }
+
+    int plansza1[n][n] = { 0 }, plansza2[n][n] = { 0 };
+
+    umiesc_statek(3, plansza1, statki1);
+    umiesc_statek(2, plansza1, statki1);
+    umiesc_statek(1, plansza1, statki1);
+    umiesc_statek(1, plansza1, statki1);
+
+    umiesc_statek_k(3, plansza2, statki2);
+    umiesc_statek_k(2, plansza2, statki2);
+    umiesc_statek_k(1, plansza2, statki2);
+    umiesc_statek_k(1, plansza2, statki2);
+
+    bool a = true;
+    while (zatopiony < 4) {
+        int x, y, z, los;
+
+        if (a) {
+        cin >> x >> y;
+        z = strzal(x, y, plansza2, statki2);
+        if (z == 2) {
+            cout << "zatopiony" << endl;
+            plansza11[x][y] = 'X';
+            zatopiony++;
+            a = true;
+        }
+        else if (z == 1) {
+            cout << "trafiony" << endl;
+            plansza11[x][y] = 'X';
+            a = true;
+        }
+        else {
+            plansza11[x][y] = 'O';
+            a = false;
+        }
+
+        for (int i = 1; i <= 5; i++) {
+            for (int j = 1; j <= 5; j++)
+                cout << plansza11[j][i] << " ";
+            cout << endl;
+        }
+
+        }
+        else {
+            los = rand() % licznik;
+            x = komputer[los][0];
+            y = komputer[los][1];
+            cout << endl << "K: " << x << " " << y << endl;
+            z = strzal(x, y, plansza1, statki1);
+            for (int i = 1; i <= 5; i++) {
+                for (int j = 1; j <= 5; j++)
+                    cout << plansza1[j][i] << " ";
+                cout << endl;
+            }
+        komputer[los][0] = 0;
+        komputer[los][1] = 0;
+        if (z == 2) {
+            cout << " zatopiony" << endl;
+            a = false;
+        }
+        else if (z == 1) {
+            cout << " trafiony" << endl;
+            a = false;
+        }
+        else {
+            cout << " pudlo" << endl;
+            a = true;
+
+        }
+        sortowanie_przez_wstawianie(komputer, 25);
+        licznik--;
+        }
 
 
-	string plansza11[n][n];
-	
-	vector <int> statki1[3];
-	vector <int> statki2[3];
-
-	int zatopiony = 0, licznik = 1;
-
-	//zerowania tablic
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++) {
-			plansza11[i][j] = ".";
-			komputer[licznik][0] = i + 1;
-			komputer[licznik][1] = j + 1;
-			licznik++;
-			//plansza1[i][j] = 0; //Y X
-			//plansza2[i][j] = 0; //Y X
-		}
-	for (int i = 0; i < 3; i++) statki1[i].push_back(0);
-	for (int i = 0; i < 3; i++) statki2[i].push_back(0);
-
-	//umiesc_statek(3, plansza1, statki1);
-	//umiesc_statek(2, plansza1, statki1);
-	//umiesc_statek(1, plansza1, statki1);
-
-	umiesc_statek_k(3, plansza2, statki2);
-	umiesc_statek_k(2, plansza2, statki2);
-	umiesc_statek_k(1, plansza2, statki2);
-
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++)
-			if (plansza1[j][i] == 9) plansza1[j][i] = 0;
-
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++)
-			cout << plansza2[j][i] << " ";
-		cout << endl;
-	}
-
-	while (zatopiony < 3) {
-		int x, y, z,los;
-		cin >> x >> y;
-		z = strzal(x, y, plansza2, statki2);
-
-		if (z == 2) {
-			cout << "Zatopiony\n";
-			plansza11[x][y] = 'X';
-			zatopiony++;
-		}
-		else if (z == 1) {
-			cout << "Trafiony\n";
-			plansza11[x][y] = 'X';
-		}
-		else plansza11[x][y] = 'O';
-
-	for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++)
-				cout << plansza11[j][i] << " ";
-			cout << endl;
-	}
-
-	los = rand() % licznik;
-	x = komputer[los][0];
-	y = komputer[los][1];
-	z = strzal(x, y, plansza1, statki1);
-	komputer[los][0] = 9;
-	komputer[los][1] = 9;
-	wstawianie_sort(komputer, 25);
-
-	if (z == 2) {
-
-	}
-	else if (z == 1) {
-
-	}
-	else {
-
-	}
-
-	}
+        /*for (int i = 0; i < licznik; i++)
+            cout << komputer[i][0] << " " << komputer[i][1] << endl;*/
+    }
 }
-
-
-
 
 /*
 #include <iostream>
