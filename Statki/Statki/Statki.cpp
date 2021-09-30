@@ -192,10 +192,13 @@ int main()
     umiesc_statek_k(1, plansza2, statki2);
 
     bool a = true;
-    while (zatopiony < 4 || zatopionyk < 4) {
-        int x, y, z, los;
+    int temp[3][2] = { 0 };
+    int t = 0;
+    while (zatopiony < 4 && zatopionyk < 4) {
+        int x, y, z, los, licz = 0;
 
         if (a) {
+           cout << "u: ";
         cin >> x >> y;
         z = strzal(x, y, plansza2, statki2);
         if (z == 2) {
@@ -238,7 +241,35 @@ int main()
             zatopionyk++;
             cout << " zatopiony" << endl;
             a = false;
+            for (int i = 0; i < 3; i++) {
+                if (temp[i][0] == 0) {
+                    t = i;
+                    temp[i][0] = x;
+                    temp[i][1] = y;
+                    break;
+                }
+            }
+            for (int i = 0; i <= t; i++) {
+                for (int j = temp[i][0] - 1; j <= temp[i][0] + 1; j++) {
+                    for (int k = temp[i][1] - 1; k <= temp[i][1] + 1; k++) {
+                        for (int m = 0; m < licznik; m++) {
+                            if (komputer[m][0] == j && komputer[m][1] == k) {
+                                komputer[m][0] = 0;
+                                komputer[m][1] = 0;
+                                licz++;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < 3; i++) {
+                temp[i][0] = 0;
+                temp[i][1] = 0;
+            }
+
         }
+
         else if (z == 1) {
             cout << " trafiony" << endl;
             a = false;
@@ -248,13 +279,12 @@ int main()
             a = true;
 
         }
+
         sortowanie_przez_wstawianie(komputer, 25);
-        licznik--;
+        if (licz != 0) licznik -= licz;
+        else licznik--;
         }
 
-
-        /*for (int i = 0; i < licznik; i++)
-            cout << komputer[i][0] << " " << komputer[i][1] << endl;*/
     }
 
     if (zatopiony == 4) cout << "wygral gracz";
