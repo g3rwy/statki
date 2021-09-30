@@ -230,11 +230,11 @@ int main()
             y = komputer[los][1];
             cout << endl << "K: " << x << " " << y << endl;
             z = strzal(x, y, plansza1, statki1);
-            for (int i = 1; i <= 5; i++) {
+            /*for (int i = 1; i <= 5; i++) {
                 for (int j = 1; j <= 5; j++)
                     cout << plansza1[j][i] << " ";
                 cout << endl;
-            }
+            }*/
         komputer[los][0] = 0;
         komputer[los][1] = 0;
         if (z == 2) {
@@ -267,7 +267,7 @@ int main()
                 temp[i][0] = 0;
                 temp[i][1] = 0;
             }
-
+            for (int m = 0; m < 25; m++) cout << komputer[m][0] << " " << komputer[m][1] << endl;
         }
 
         else if (z == 1) {
